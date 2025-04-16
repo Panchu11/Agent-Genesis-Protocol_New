@@ -18,6 +18,7 @@ const Header: React.FC = () => {
     { name: 'Home', href: '/' },
     { name: 'AGP Chat', href: '/chat' },
     { name: 'Agent Forge', href: '/forge' },
+    { name: 'Builder', href: '/builder' },
     { name: 'Evolution', href: '/evolution' },
     { name: 'Broadcasts', href: '/broadcasts' },
     { name: 'Arenas', href: '/arenas' },
