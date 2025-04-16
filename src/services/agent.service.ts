@@ -1,15 +1,19 @@
+'use client';
+
 /**
  * Agent Genesis Protocol - Agent Service
- * 
+ *
  * This service manages agent creation, retrieval, and evolution.
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import { 
-  Agent, 
-  AgentClass, 
-  AgentTrait, 
-  PointsTransactionType 
+import db from './db.service';
+import pointsService from './points.service';
+import {
+  Agent,
+  AgentClass,
+  AgentTrait,
+  PointsTransactionType
 } from '../types';
 
 /**
@@ -43,10 +47,20 @@ export const createAgent = async (
       class: AgentClass.SCOUT,
       creator
     };
-    
-    // In a real implementation, this would save to IndexedDB
-    // For now, we'll just return the agent
-    
+
+    // Add the agent to the database
+    await db.agents.add(agent);
+
+    // Award points for creating an agent
+    await pointsService.addPoints(
+      creator,
+      50,
+      PointsTransactionType.AGENT_CREATION,
+      `Created agent: ${name}`,
+      agent.id,
+      'agent'
+    );
+
     return agent;
   } catch (error) {
     console.error('Error creating agent:', error);
@@ -59,9 +73,7 @@ export const createAgent = async (
  */
 export const getAgent = async (id: string): Promise<Agent | undefined> => {
   try {
-    // In a real implementation, this would fetch from IndexedDB
-    // For now, we'll just return undefined
-    return undefined;
+    return await db.agents.get(id);
   } catch (error) {
     console.error('Error getting agent:', error);
     throw error;
@@ -75,9 +87,10 @@ export const getAllAgents = async (
   creator?: string
 ): Promise<Agent[]> => {
   try {
-    // In a real implementation, this would fetch from IndexedDB
-    // For now, we'll just return an empty array
-    return [];
+    if (creator) {
+      return await db.agents.where('creator').equals(creator).toArray();
+    }
+    return await db.agents.toArray();
   } catch (error) {
     console.error('Error getting all agents:', error);
     throw error;
@@ -92,9 +105,24 @@ export const updateAgent = async (
   updates: Partial<Agent>
 ): Promise<Agent | undefined> => {
   try {
-    // In a real implementation, this would update in IndexedDB
-    // For now, we'll just return undefined
-    return undefined;
+    // Get the current agent
+    const agent = await db.agents.get(id);
+
+    if (!agent) {
+      throw new Error(`Agent with ID ${id} not found`);
+    }
+
+    // Update the agent
+    const updatedAgent = {
+      ...agent,
+      ...updates,
+      updatedAt: Date.now()
+    };
+
+    // Save the updated agent
+    await db.agents.update(id, updatedAgent);
+
+    return updatedAgent;
   } catch (error) {
     console.error('Error updating agent:', error);
     throw error;
@@ -106,7 +134,7 @@ export const updateAgent = async (
  */
 export const deleteAgent = async (id: string): Promise<void> => {
   try {
-    // In a real implementation, this would delete from IndexedDB
+    await db.agents.delete(id);
   } catch (error) {
     console.error('Error deleting agent:', error);
     throw error;
@@ -122,9 +150,40 @@ export const addAgentXP = async (
   userId: string = 'default-user'
 ): Promise<Agent | undefined> => {
   try {
-    // In a real implementation, this would update in IndexedDB
-    // For now, we'll just return undefined
-    return undefined;
+    // Get the current agent
+    const agent = await db.agents.get(id);
+
+    if (!agent) {
+      throw new Error(`Agent with ID ${id} not found`);
+    }
+
+    // Calculate new XP and level
+    const newXP = agent.xp + xp;
+    const newLevel = calculateLevel(newXP);
+
+    // Check if the agent leveled up
+    const leveledUp = newLevel > agent.level;
+
+    // Update the agent
+    const updatedAgent = await updateAgent(id, {
+      xp: newXP,
+      level: newLevel,
+      class: calculateClass(newLevel)
+    });
+
+    // Award points for agent evolution if leveled up
+    if (leveledUp && updatedAgent) {
+      await pointsService.addPoints(
+        userId,
+        100 * newLevel,
+        PointsTransactionType.AGENT_EVOLUTION,
+        `Agent ${agent.name} evolved to level ${newLevel}`,
+        agent.id,
+        'agent'
+      );
+    }
+
+    return updatedAgent;
   } catch (error) {
     console.error('Error adding agent XP:', error);
     throw error;
@@ -160,9 +219,36 @@ export const addAgentTrait = async (
   userId: string = 'default-user'
 ): Promise<Agent | undefined> => {
   try {
-    // In a real implementation, this would update in IndexedDB
-    // For now, we'll just return undefined
-    return undefined;
+    // Get the current agent
+    const agent = await db.agents.get(agentId);
+
+    if (!agent) {
+      throw new Error(`Agent with ID ${agentId} not found`);
+    }
+
+    // Create the trait
+    const newTrait: AgentTrait = {
+      id: uuidv4(),
+      ...trait,
+      unlocked: true
+    };
+
+    // Add the trait to the agent
+    const updatedAgent = await updateAgent(agentId, {
+      traits: [...agent.traits, newTrait]
+    });
+
+    // Award points for adding a trait
+    await pointsService.addPoints(
+      userId,
+      30,
+      PointsTransactionType.AGENT_EVOLUTION,
+      `Added trait ${trait.name} to agent ${agent.name}`,
+      agent.id,
+      'agent'
+    );
+
+    return updatedAgent;
   } catch (error) {
     console.error('Error adding agent trait:', error);
     throw error;

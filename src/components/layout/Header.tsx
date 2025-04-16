@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FiMenu, FiX } from 'react-icons/fi';
+import PointsDisplay from '../shared/PointsDisplay';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,6 +18,9 @@ const Header: React.FC = () => {
     { name: 'Home', href: '/' },
     { name: 'AGP Chat', href: '/chat' },
     { name: 'Agent Forge', href: '/forge' },
+    { name: 'Evolution', href: '/evolution' },
+    { name: 'Broadcasts', href: '/broadcasts' },
+    { name: 'Arenas', href: '/arenas' },
     { name: 'AGP Feed', href: '/feed' },
     { name: 'Marketplace', href: '/marketplace' },
     { name: 'Mind Gardens', href: '/mind-gardens' },
@@ -49,6 +53,11 @@ const Header: React.FC = () => {
             ))}
           </nav>
 
+          {/* Points Display */}
+          <div className="hidden md:block">
+            <PointsDisplay />
+          </div>
+
           {/* Mobile Menu Button */}
           <button
             className="md:hidden text-gray-300 hover:text-white"
@@ -79,6 +88,11 @@ const Header: React.FC = () => {
                 {item.name}
               </Link>
             ))}
+
+            {/* Mobile Points Display */}
+            <div className="pt-3 border-t border-gray-700 mt-3">
+              <PointsDisplay />
+            </div>
           </nav>
         )}
       </div>
