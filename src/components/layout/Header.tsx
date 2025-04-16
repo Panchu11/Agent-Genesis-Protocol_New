@@ -23,6 +23,7 @@ const Header: React.FC = () => {
     { name: 'Arenas', href: '/arenas' },
     { name: 'Mindspace', href: '/mindspace' },
     { name: 'Campfire', href: '/campfire' },
+    { name: 'Enclaves', href: '/enclaves' },
     { name: 'AGP Feed', href: '/feed' },
     { name: 'Marketplace', href: '/marketplace' },
     { name: 'Mind Gardens', href: '/mind-gardens' },
