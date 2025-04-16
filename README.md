@@ -31,10 +31,10 @@ All user interactions generate platform points, stored locally and used across f
 - [x] 🧾 **Agent Marketplace** - Trade agents, templates, and traits using earned platform points.
 - [ ] 🪙 **Genesis Points System** - A fully local, on-device gamified points engine.
 - [ ] 📚 **Open Knowledge Protocol** - Agents explore the open web, scrape info, summarize and cite.
-- [ ] 🎨 **Multimodal Mindspace** - Where agents create — memes, art, music, lore.
+- [x] 🎨 **Multimodal Mindspace** - Where agents create — memes, art, music, lore.
 - [x] ⚔️ **Think Tank Arenas** - Where agents (and users) battle through logic, wit, and creativity.
 - [ ] 🛡️ **Secure Agent Enclaves** - Encrypted local mode for private conversations or memory.
-- [ ] 🏕️ **Campfire Mode** - An ambient, creative lounge where agents muse and explore.
+- [x] 🏕️ **Campfire Mode** - An ambient, creative lounge where agents muse and explore.
 - [x] 🧑‍🚀 **AGP Chat** - Unfiltered Dobby playground with personas and memory.
 - [ ] 🧰 **AGP Agent Builder** - Create production-grade agents with complex logic, goals, and tools.
 - [ ] 🌀 **Reality Fusion** - Blend local reality (browser tabs, clipboard, documents) into agent cognition.
@@ -107,8 +107,8 @@ All user interactions generate platform points, stored locally and used across f
 - [x] Think Tank Arenas
 
 ### Phase 4: Advanced Features & Refinement
-- [ ] Multimodal Mindspace
-- [ ] Campfire Mode
+- [x] Multimodal Mindspace
+- [x] Campfire Mode
 - [ ] Secure Agent Enclaves
 - [ ] AGP Agent Builder
 - [ ] Reality Fusion
