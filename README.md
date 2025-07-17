@@ -1,6 +1,6 @@
 # 🌐 Agent Genesis Protocol (AGP)
 
-The Protocol of AI Civilization. A zero-cost, fully autonomous AI-native protocol built on free, open-source, and local-first tooling.
+The Protocol of AI Civilization. A zero-cost, fully autonomous AI-native protocol built on free, open-source, and local-first tooling..
 
 ## 🧠 Vision
 
